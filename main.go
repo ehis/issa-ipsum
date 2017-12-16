@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"math/rand"
 	"net/http"
 	"os"
 	"strconv"
@@ -13,6 +14,23 @@ import (
 
 	"github.com/gorilla/mux"
 )
+
+var trackList = []string{
+	"7-min-freestyle",
+	"baby-girl",
+	"bad-business",
+	"bank-account",
+	"close-my-eyes",
+	"dead-people",
+	"facetime",
+	"famous",
+	"money-convo",
+	"nothing-new",
+	"numb",
+	"special",
+	"thug-life",
+	"whole-lot",
+}
 
 // Message envelope for http responses
 type Message struct {
@@ -69,7 +87,10 @@ func IssaIpsumHandler(w http.ResponseWriter, r *http.Request) {
 
 // IssaMarkovChain takes ideas from markov chain algorithm
 func IssaMarkovChain(sentences int) []byte {
-	file, err := os.Open("./issa-album/bank-account.txt")
+	rand.Seed(time.Now().Unix())
+	track := trackList[rand.Intn(len(trackList))]
+	filePath := fmt.Sprintf("./issa-album/%s.txt", track)
+	file, err := os.Open(filePath)
 
 	if err != nil {
 		log.Fatal(err)
@@ -87,9 +108,10 @@ func IssaMarkovChain(sentences int) []byte {
 			err = scanner.Err()
 			if err == nil {
 				log.Println("Scan completed and reached EOF")
-			} else {
-				log.Fatal(err)
+				return IssaMarkovChain(i)
 			}
+
+			log.Fatal(err)
 		}
 
 		buffer.WriteString(fmt.Sprintf("Issa Ipsum %s ", scanner.Text()))
