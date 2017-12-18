@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"log"
 	"math/rand"
 	"net/http"
@@ -38,8 +39,21 @@ type Message struct {
 	Time time.Time   `json:"time"`
 }
 
+func extractSentences(r *http.Request) int {
+	query := r.FormValue("sentences")
+	sentences, err := strconv.Atoi(query)
+
+	if err != nil {
+		// default to 5 sentences
+		sentences = 5
+	}
+
+	return sentences
+}
+
 func main() {
 	r := mux.NewRouter()
+	r.HandleFunc("/", IndexHandler)
 	r.HandleFunc("/v1/issa-ipsum", IssaIpsumHandler).Methods("GET")
 	r.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
 		fmt.Println("====== Routes ======")
@@ -61,14 +75,7 @@ func main() {
 
 // IssaIpsumHandler generates a ipsum from 21 Savage's Issa Album
 func IssaIpsumHandler(w http.ResponseWriter, r *http.Request) {
-	query := r.FormValue("sentences")
-	sentences, err := strconv.Atoi(query)
-
-	if err != nil {
-		// default to 5 sentences
-		sentences = 5
-	}
-
+	sentences := extractSentences(r)
 	text := IssaMarkovChain(sentences)
 
 	msg := Message{
@@ -118,4 +125,24 @@ func IssaMarkovChain(sentences int) []byte {
 	}
 
 	return buffer.Bytes()
+}
+
+// IndexHandler loads the index page
+func IndexHandler(w http.ResponseWriter, r *http.Request) {
+	sentences := extractSentences(r)
+
+	title := "Issa Ipsum"
+
+	page := map[string]interface{}{
+		"Title": title,
+		"Body":  string(IssaMarkovChain(sentences)),
+	}
+
+	t, err := template.ParseFiles("pages/index.html")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	t.Execute(w, page)
 }
