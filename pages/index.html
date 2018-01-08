@@ -14,14 +14,37 @@
             flex-direction: column;
         }
     </style>
+    <script src="https://unpkg.com/stimulus/dist/stimulus.umd.js"></script>
+    <script>
+        (function() {
+            const application = Stimulus.Application.start()
+            const IpsumController = class extends Stimulus.Controller{
+                generate() {
+                    console.log(`You're requesting ${this.sentences} sentences`)
+                }
+
+                get sentences() {
+                    return this.targets.find('sentences').value
+                }
+            }
+
+            // register controllers
+            application.register('ipsum', IpsumController)
+        })()
+    </script>
 </head>
 
 <body>
     <h1>{{.Title}}</h1>
 
     <section class="content">
-        <div>
-            <textarea name="body" id="issa-ipsum" cols="50" rows="80">{{printf "%s" .Body}}</textarea>
+        <div data-controller="ipsum">
+            <input type="number" name="sentences" id="sentences" data-target="ipsum.sentences">
+            <div>
+                <textarea name="body" id="ipsum" cols="50" rows="80">{{printf "%s" .Body}}</textarea>
+            </div>
+
+            <button data-action="click->ipsum#generate">21!!</button>
         </div>
     </section>
 </body>
