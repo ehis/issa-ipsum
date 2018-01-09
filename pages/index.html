@@ -13,14 +13,50 @@
             align-items: center;
             flex-direction: column;
         }
+
+        .clipboard-button {
+            display: none;
+        }
+
+        .clipboard--supported .clipboard-button {
+            display: initial;
+        }
     </style>
     <script src="https://unpkg.com/stimulus/dist/stimulus.umd.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
         (function() {
             const application = Stimulus.Application.start()
-            const IpsumController = class extends Stimulus.Controller{
+            const IpsumController = class extends Stimulus.Controller {
+                initialize() {
+                    if (document.queryCommandSupported("copy")) {
+                        this.element.classList.add('clipboard--supported')
+                    }
+                }
+                
+                copy() {
+                    this.body.select()
+                    document.execCommand('copy')
+                }
+
+                get body() {
+                    return this.targets.find('body')
+                }
+
+                set body(value) {
+                    this.data.set('body', value)
+                    this.targets.find('body').value = value
+                } 
+
                 generate() {
                     console.log(`You're requesting ${this.sentences} sentences`)
+                    return axios({
+                        method: 'GET',
+                        url: `/v1/issa-ipsum?sentences=${this.sentences}`
+                    })
+                    .then(({ data: { body }}) => {
+                        this.body = body
+                    })
                 }
 
                 get sentences() {
@@ -39,12 +75,14 @@
 
     <section class="content">
         <div data-controller="ipsum">
-            <input type="number" name="sentences" id="sentences" data-target="ipsum.sentences">
+            <input type="number" name="sentences" id="sentences" value={{.Sentences}} data-target="ipsum.sentences">
             <div>
-                <textarea name="body" id="ipsum" cols="50" rows="80">{{printf "%s" .Body}}</textarea>
+                <textarea name="body" id="ipsum" cols="50" rows="80" data-target="ipsum.body">{{printf "%s" .Body}}</textarea>
             </div>
 
             <button data-action="click->ipsum#generate">21!!</button>
+            <button data-action="ipsum#copy" class="clipboard-button">Copy to Clipboard</button>
+
         </div>
     </section>
 </body>

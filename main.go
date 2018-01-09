@@ -35,7 +35,7 @@ var trackList = []string{
 
 // Message envelope for http responses
 type Message struct {
-	Data interface{} `json:"data"`
+	Body interface{} `json:"body"`
 	Time time.Time   `json:"time"`
 }
 
@@ -79,7 +79,7 @@ func IssaIpsumHandler(w http.ResponseWriter, r *http.Request) {
 	text := IssaMarkovChain(sentences)
 
 	msg := Message{
-		Data: string(text),
+		Body: string(text),
 		Time: time.Now(),
 	}
 
@@ -134,8 +134,9 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	title := "Issa Ipsum"
 
 	page := map[string]interface{}{
-		"Title": title,
-		"Body":  string(IssaMarkovChain(sentences)),
+		"Title":     title,
+		"Sentences": sentences,
+		"Body":      string(IssaMarkovChain(sentences)),
 	}
 
 	t, err := template.ParseFiles("pages/index.html")
