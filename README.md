@@ -18,8 +18,8 @@ Issa Ipsum is go Ispum generator which pseudo-randomly picks the lyrics of a tra
  - thug-life
  - whole-lot
 
-### Testing Locally
+### Exposed API
 
- ```curl
-    http://localhost:8080/v1/issa-ipsum?sentences=200
+ ```
+    .../v1/issa-ipsum?sentences=200
  ```
