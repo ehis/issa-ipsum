@@ -45,7 +45,7 @@ func extractSentences(r *http.Request) int {
 
 	if err != nil {
 		// default to 5 sentences
-		sentences = 5
+		sentences = 21
 	}
 
 	return sentences
@@ -67,6 +67,7 @@ func main() {
 
 		return nil
 	})
+	r.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("public/"))))
 	http.Handle("/", r)
 
 	log.Print("Listening on port 8080")

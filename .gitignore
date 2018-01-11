@@ -3,6 +3,7 @@
 *.dll
 *.so
 *.dylib
+*.DS_store
 
 # Test binary, build with `go test -c`
 *.test

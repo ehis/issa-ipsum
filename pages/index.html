@@ -5,84 +5,85 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-
-    <style>
-        body {
-            display: flex;
-            align-items: center;
-            flex-direction: column;
-        }
-
-        .clipboard-button {
-            display: none;
-        }
-
-        .clipboard--supported .clipboard-button {
-            display: initial;
-        }
-    </style>
+    <title>Issa Ipsum</title>
+    <link href="https://unpkg.com/normalize.css" rel="stylesheet">
+    <link href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
+    <link href="/css/main.css" rel="stylesheet">
     <script src="https://unpkg.com/stimulus/dist/stimulus.umd.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-117547549-1"></script>
     <script>
-        (function() {
-            const application = Stimulus.Application.start()
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-117547549-1');
+    </script>
+    <script>
+        (function () {
+            const application = Stimulus.Application.start();
             const IpsumController = class extends Stimulus.Controller {
+
                 initialize() {
+                    this.sentences = 21;
+
                     if (document.queryCommandSupported("copy")) {
-                        this.element.classList.add('clipboard--supported')
+                        this.element.classList.add('clipboard--supported');
                     }
                 }
-                
+
                 copy() {
-                    this.body.select()
-                    document.execCommand('copy')
+                    this.body.select();
+                    document.execCommand('copy');
                 }
 
                 get body() {
-                    return this.targets.find('body')
+                    return this.targets.find('body');
                 }
 
                 set body(value) {
-                    this.data.set('body', value)
-                    this.targets.find('body').value = value
-                } 
+                    this.data.set('body', value);
+                    this.targets.find('body').value = value;
+                }
 
                 generate() {
-                    console.log(`You're requesting ${this.sentences} sentences`)
+                    console.log(`You're requesting ${this.sentences} sentences`);
                     return axios({
                         method: 'GET',
                         url: `/v1/issa-ipsum?sentences=${this.sentences}`
                     })
-                    .then(({ data: { body }}) => {
-                        this.body = body
-                    })
-                }
-
-                get sentences() {
-                    return this.targets.find('sentences').value
+                        .then(({ data: { body } }) => {
+                            this.body = body;
+                        });
                 }
             }
 
             // register controllers
-            application.register('ipsum', IpsumController)
-        })()
+            application.register('ipsum', IpsumController);
+        })();
     </script>
 </head>
 
 <body>
-    <h1>{{.Title}}</h1>
-
+    <h1 class="title">{{.Title}}</h1>
+    <div class="credits">Made By
+        <a href="http://twitter.com/ehiszy">@ehiszy</a> &
+        <a href="https://twitter.com/gangsta_phil">@gangsta_phil</a>
+    </div>
     <section class="content">
-        <div data-controller="ipsum">
-            <input type="number" name="sentences" id="sentences" value={{.Sentences}} data-target="ipsum.sentences">
-            <div>
-                <textarea name="body" id="ipsum" cols="50" rows="80" data-target="ipsum.body">{{printf "%s" .Body}}</textarea>
+        <img class="side-image" src="/images/21-clear-fade.png" alt="">
+        <div class="grid" data-controller="ipsum">
+            <h2>Generate Sentences</h2>
+            <button class="generate" data-action="click->ipsum#generate">21!</button>
+            <div class="info">
+                <i data-action="click->ipsum#copy" class="clipboard-button far fa-copy">
+                    <span>Copy</span>
+                </i>
+                <textarea name="body" id="ipsum" spellcheck="false" cols="50" rows="80" data-target="ipsum.body">{{printf "%s" .Body}}</textarea>
             </div>
-
-            <button data-action="click->ipsum#generate">21!!</button>
-            <button data-action="ipsum#copy" class="clipboard-button">Copy to Clipboard</button>
-
         </div>
     </section>
 </body>
