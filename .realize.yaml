@@ -22,7 +22,7 @@ server:
   host: localhost
 schema:
 - name: issa-ipsum
-  path: /Users/ehis/go/src/github.com/ehis/issa-ipsum
+  path: .
   commands:
     vet:
       args:
