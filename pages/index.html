@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
     <link href="/css/main.css" rel="stylesheet">
-    <script src="https://unpkg.com/stimulus/dist/stimulus.umd.js"></script>
+    <script src="https://unpkg.com/stimulus@1.1.0/dist/stimulus.umd.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-117547549-1"></script>
@@ -22,49 +22,7 @@
 
         gtag('config', 'UA-117547549-1');
     </script>
-    <script>
-        (function () {
-            const application = Stimulus.Application.start();
-            const IpsumController = class extends Stimulus.Controller {
-
-                initialize() {
-                    this.sentences = 21;
-
-                    if (document.queryCommandSupported("copy")) {
-                        this.element.classList.add('clipboard--supported');
-                    }
-                }
-
-                copy() {
-                    this.body.select();
-                    document.execCommand('copy');
-                }
-
-                get body() {
-                    return this.targets.find('body');
-                }
-
-                set body(value) {
-                    this.data.set('body', value);
-                    this.targets.find('body').value = value;
-                }
-
-                generate() {
-                    console.log(`You're requesting ${this.sentences} sentences`);
-                    return axios({
-                        method: 'GET',
-                        url: `/v1/issa-ipsum?sentences=${this.sentences}`
-                    })
-                        .then(({ data: { body } }) => {
-                            this.body = body;
-                        });
-                }
-            }
-
-            // register controllers
-            application.register('ipsum', IpsumController);
-        })();
-    </script>
+    <script src="/js/main.js" type="text/javascript"></script>
 </head>
 
 <body>
@@ -76,7 +34,7 @@
     <section class="content">
         <img class="side-image" src="/images/21-clear-fade.png" alt="">
         <div class="grid" data-controller="ipsum">
-            <h2>Generate Sentences</h2>
+            <input type="number" placeholder="Enter Sentences">
             <button class="generate" data-action="click->ipsum#generate">21!</button>
             <div class="info">
                 <i data-action="click->ipsum#copy" class="clipboard-button far fa-copy">
