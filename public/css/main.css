@@ -163,6 +163,11 @@ input {
     width: 100%;
     border-bottom: 3px solid #302629;
     background: transparent;
+    outline: none;
+}
+
+input:focus {
+    outline: none;
 }
 
 input[type="number"]::-webkit-inner-spin-button,
