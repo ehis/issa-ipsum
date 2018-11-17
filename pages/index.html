@@ -1,49 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Issa Ipsum</title>
-    <link href="https://unpkg.com/normalize.css" rel="stylesheet">
-    <link href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
-    <link href="/css/main.css" rel="stylesheet">
-    <script src="https://unpkg.com/stimulus@1.1.0/dist/stimulus.umd.js"></script>
+    <link href="https://unpkg.com/normalize.css" rel="stylesheet" />
+    <link
+      href="https://use.fontawesome.com/releases/v5.0.8/css/all.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Oswald"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto+Condensed"
+      rel="stylesheet"
+    />
+    <link href="/css/main.css" rel="stylesheet" />
+    <!-- development version, includes helpful console warnings -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-117547549-1"></script>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=UA-117547549-1"
+    ></script>
     <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
 
-        gtag('config', 'UA-117547549-1');
+      gtag("config", "UA-117547549-1");
     </script>
     <script src="/js/main.js" type="text/javascript"></script>
-</head>
+  </head>
 
-<body>
-    <h1 class="title">{{.Title}}</h1>
-    <div class="credits">Made By
-        <a href="http://twitter.com/ehiszy">@ehiszy</a> &
+  <body>
+    <div id="app">
+      <h1 class="title">Issa Ipsum</h1>
+      <div class="credits">
+        Made By <a href="http://twitter.com/ehiszy">@ehiszy</a> &
         <a href="https://twitter.com/gangsta_phil">@gangsta_phil</a>
-    </div>
-    <section class="content">
-        <img class="side-image" src="/images/21-clear-fade.png" alt="">
-        <div class="grid" data-controller="ipsum">
-            <input data-target="ipsum.sentence" type="number" placeholder="Enter number of Sentences">
-            <button class="generate" data-action="click->ipsum#generate">21!</button>
-            <div class="info">
-                <i data-action="click->ipsum#copy" class="clipboard-button far fa-copy">
-                    <span>Copy</span>
-                </i>
-                <textarea name="body" id="ipsum" spellcheck="false" cols="50" rows="80" data-target="ipsum.body">{{printf "%s" .Body}}</textarea>
-            </div>
+      </div>
+      <section class="content">
+        <img class="side-image" src="/images/21-clear-fade.png" alt="" />
+        <div class="grid">
+          <input
+            v-model="sentences"
+            type="number"
+            placeholder="Enter number of Sentences"
+          />
+          <button class="generate" v-on:click="generate">21!</button>
+          <div class="info">
+            <i
+              data-action="click->ipsum#copy"
+              class="clipboard-button far fa-copy"
+            >
+              <span>Copy</span>
+            </i>
+            <textarea
+              v-model="body"
+              name="body"
+              id="ipsum"
+              spellcheck="false"
+              cols="50"
+              rows="80"
+            ></textarea>
+          </div>
         </div>
-    </section>
-</body>
-
+      </section>
+    </div>
+  </body>
 </html>

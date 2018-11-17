@@ -93,7 +93,7 @@ func IssaIpsumHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(resp)
 }
 
-// IssaMarkovChain takes ideas from markov chain algorithm
+// IssaMarkovChain takes ideas from the markov chain algorithm
 func IssaMarkovChain(sentences int) []byte {
 	rand.Seed(time.Now().Unix())
 	track := trackList[rand.Intn(len(trackList))]
@@ -130,21 +130,11 @@ func IssaMarkovChain(sentences int) []byte {
 
 // IndexHandler loads the index page
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
-	sentences := extractSentences(r)
-
-	title := "Issa Ipsum"
-
-	page := map[string]interface{}{
-		"Title":     title,
-		"Sentences": sentences,
-		"Body":      string(IssaMarkovChain(sentences)),
-	}
-
 	t, err := template.ParseFiles("pages/index.html")
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	t.Execute(w, page)
+	t.Execute(w, nil)
 }
