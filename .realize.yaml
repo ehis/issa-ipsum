@@ -17,27 +17,25 @@ settings:
     interval: 0s
 server:
   status: true
-  open: true
+  open: false
   port: 5002
   host: localhost
 schema:
 - name: issa-ipsum
   path: .
   commands:
-    vet:
-      args:
-      - none
     install:
       status: true
     run:
       status: true
   watcher:
-    paths:
-    - /
     extensions:
     - go
     - html
-    ignored_paths:
-    - .git
-    - .realize
-    - vendor
+    paths:
+    - /
+    ignore:
+      paths:
+      - .git
+      - .realize
+      - vendor
